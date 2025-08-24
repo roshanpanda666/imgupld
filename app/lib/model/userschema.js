@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-  password: String,
-  user1: String,
+  user: String,
+  content: String,
 });
 
 // 👇 Here we map to a DIFFERENT collection

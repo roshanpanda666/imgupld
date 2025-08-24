@@ -49,16 +49,16 @@ export default function ImageUploader() {
   }
 
   return (
-    <div>
+    <div className="mt-24 mb-10 flex flex-col justify-center items-center">
       <h2 className="text-xl font-bold mb-4">Upload Image</h2>
-      <input type="file" onChange={handleUpload} />
+      <input type="file" onChange={handleUpload} className="border-2 border-cyan-300 cursor-pointer text-center"/>
       {loading && <p>Uploading...</p>}
 
       <h3 className="mt-6 text-lg font-semibold">Uploaded Images:</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
         {images.map((img) => (
           <div key={img._id} className="border p-2 rounded">
-            <img src={img.img1} alt={img.fileName || "image"} className="w-full h-auto" />
+            <img src={img.img1} alt={img.fileName || "image"} className="w-full h-auto text-center" />
             <p className="text-sm mt-1">{img.fileName}</p>
           </div>
         ))}
