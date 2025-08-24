@@ -10,5 +10,13 @@ export async function GET(){
      return NextResponse.json(data)
 }
 
+export async function POST(request){
+    const payload=await request.json()
+    await mongoose.connect(connectionSRT)
+    let user= new usermodel(payload)
+    const result= await user.save()
+    return NextResponse.json({success:true,result})
+    
+}
 
 
