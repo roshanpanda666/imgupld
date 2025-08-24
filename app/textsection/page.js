@@ -8,29 +8,36 @@ export default function UserList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  async function fetchUsers() {
-    try {
-      const res = await fetch("/api/userget");
-      const data = await res.json();
-      setUsers(data);
-      setLoading(false);
-    } catch (err) {
-      console.error("Failed to fetch users:", err);
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    // fetch immediately on mount
-    fetchUsers();
+    // Fetch existing users once
+    fetch("/api/userget")
+      .then(res => res.json())
+      .then(data => {
+        setUsers(data);
+        setLoading(false); // ✅ fix loading state
+      });
 
-    // set interval for polling
-    const interval = setInterval(() => {
-      fetchUsers();
-    }, 2000); // 2000ms = 2 seconds
+    // Listen for DB changes via SSE
+    const eventSource = new EventSource("/api/userstream");
 
-    // cleanup when component unmounts
-    return () => clearInterval(interval);
+    eventSource.onmessage = (event) => {
+      const change = JSON.parse(event.data);
+      console.log("📡 Change:", change);
+
+      if (change.operationType === "insert") {
+        const newUser = change.fullDocument;
+        setUsers(prev => [newUser, ...prev]);
+      }
+      if (change.operationType === "delete") {
+        setUsers(prev => prev.filter(u => u._id !== change.documentKey._id));
+      }
+      if (change.operationType === "update") {
+        // you can fetch again or patch the user in state
+      }
+    };
+
+    // cleanup on unmount
+    return () => eventSource.close();
   }, []);
 
   if (loading) return <p>Loading users...</p>;
