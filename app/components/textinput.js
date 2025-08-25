@@ -44,7 +44,7 @@ const Textinput = () => {
   return (
     <div className="flex flex-col justify-center items-center">
         <div className="flex-col">
-        <div className="mb-2 font-semibold">Text Input field</div>
+        <div className="mb-2 font-semibold">Text Input </div>
       <input
         type="text"
         ref={inputRef}
