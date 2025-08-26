@@ -14,6 +14,7 @@ export async function POST(request){
     const payload=await request.json()
     await mongoose.connect(connectionSRT)
     let user= new usermodel(payload)
+    // console.log("Payload:", payload); // check if badword is here
     const result= await user.save()
     return NextResponse.json({success:true,result})
     

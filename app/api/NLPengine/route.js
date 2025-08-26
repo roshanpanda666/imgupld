@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import natural from "natural";
 
-let isWatching = false; // make sure we don’t add multiple listeners in dev
+let isWatching = false; // prevent multiple listeners in dev
 
 // 🔥 Setup NLP filter
 const tokenizer = new natural.WordTokenizer();
@@ -28,7 +28,7 @@ export async function GET() {
 
       const changeStream = usermodel.watch();
 
-      changeStream.on("change", (change) => {
+      changeStream.on("change", async (change) => {
         if (change.operationType === "insert") {
           const newDoc = change.fullDocument;
 
@@ -44,6 +44,16 @@ export async function GET() {
             if (err) console.error("❌ Error writing log file:", err);
             else console.log("✅ Log saved to logs.txt");
           });
+
+          // ✅ Update DB with badword flag
+          if (isBad) {
+            try {
+              await usermodel.findByIdAndUpdate(newDoc._id, { badword: true });
+              console.log(`✅ Updated doc ${newDoc._id} with badword:true`);
+            } catch (err) {
+              console.error("❌ Failed to update badword field:", err);
+            }
+          }
         }
       });
 

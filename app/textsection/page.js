@@ -50,13 +50,23 @@ export default function UserList() {
         <Textinput />
       </div>
 
-      {users.map((user) => (
-        <div key={user._id} className="border p-4 rounded shadow">
-          <h3 className="font-bold text-lg">{user.user}</h3>
-          <p>content: {user.content}</p>
-          <p>content: {user.badwords}</p>
-        </div>
-      ))}
+      {users.map((user) => {
+  const isBad = user?.badword === "true"; // ✅ only true is "bad"
+
+  return (
+    <div
+      key={user._id}
+      className={`p-4 rounded shadow border-2 ${
+        isBad ? "border-red-500" : "border-green-500"
+      }`}
+    >
+      <h3 className="font-bold text-lg">{user.user}</h3>
+      <p>content: {user.content}</p>
+      <p>badword: {String(user.badword)}</p>
+    </div>
+  );
+})}
+
     </div>
   );
 }
