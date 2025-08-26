@@ -24,7 +24,8 @@ const Textinput = () => {
         },
         body:JSON.stringify({
             user:value2,
-            content:value
+            content:value,
+            badword:"false",
         }),
       })
       const result=await response.json()

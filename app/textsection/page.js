@@ -54,7 +54,7 @@ export default function UserList() {
         <div key={user._id} className="border p-4 rounded shadow">
           <h3 className="font-bold text-lg">{user.user}</h3>
           <p>content: {user.content}</p>
-          
+          <p>content: {user.badwords}</p>
         </div>
       ))}
     </div>
