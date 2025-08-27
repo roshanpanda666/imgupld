@@ -4,15 +4,16 @@ import { usermodel } from "@/app/lib/model/userschema";
 
 export async function GET() {
   await mongoose.connect(connectionSRT);
-
   const encoder = new TextEncoder();
 
   return new Response(
     new ReadableStream({
       async start(controller) {
+        // open change stream
         const changeStream = usermodel.watch();
 
-        const onChange = (change) => {
+        // listen for changes
+        changeStream.on("change", (change) => {
           console.log("🔥 Change detected:", change);
 
           try {
@@ -36,32 +37,41 @@ export async function GET() {
                   })}\n\n`
                 )
               );
+            } else if (change.operationType === "delete") {
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({
+                    type: "delete",
+                    docId: change.documentKey._id,
+                  })}\n\n`
+                )
+              );
             }
           } catch (err) {
-            console.warn("⚠️ Stream closed, skipping enqueue");
+            console.warn("⚠️ Failed enqueue, probably client disconnected");
           }
-        };
+        });
 
-        changeStream.on("change", onChange);
-
-        // 👇 Handle when client disconnects
-        controller.onclose = () => {
-          console.log("❌ Client disconnected, closing change stream...");
-          changeStream.close();
-        };
-        controller.onabort = () => {
-          console.log("❌ Stream aborted, closing change stream...");
-          changeStream.close();
-        };
+        // keep-alive heartbeat to stop idle disconnects
+        const keepAlive = setInterval(() => {
+          try {
+            controller.enqueue(encoder.encode(":\n\n")); // SSE comment = heartbeat
+          } catch {
+            clearInterval(keepAlive);
+            changeStream.close();
+          }
+        }, 15000); // 15s ping
       },
+
       cancel() {
         console.log("❌ Stream canceled, cleaning up...");
+        changeStream?.close();
       },
     }),
     {
       headers: {
         "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
+        "Cache-Control": "no-cache, no-transform",
         Connection: "keep-alive",
       },
     }

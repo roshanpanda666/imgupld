@@ -19,3 +19,27 @@ export async function POST(request){
     return NextResponse.json({success:true,result})
     
 }
+
+// ✅ DELETE API
+export async function DELETE(request) {
+    try {
+      const { id } = await request.json(); // expecting { "id": "user_id_here" }
+  
+      if (!id) {
+        return NextResponse.json({ success: false, error: "Missing user id" }, { status: 400 });
+      }
+  
+      await mongoose.connect(connectionSRT);
+  
+      const deletedUser = await usermodel.findByIdAndDelete(id);
+  
+      if (!deletedUser) {
+        return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
+      }
+  
+      return NextResponse.json({ success: true, message: "User deleted", deletedUser });
+    } catch (err) {
+      console.error("❌ Delete API Error:", err);
+      return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
+    }
+  }

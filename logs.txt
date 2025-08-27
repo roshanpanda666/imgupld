@@ -34,3 +34,47 @@ user:roshanpanda
 content:hello its roshan you fuck
 nsfw:true
 ---
+user:tt101
+content:hey fuck you
+nsfw:true
+---
+user:tt101
+content:we dont use bad words
+nsfw:false
+---
+user:fuck
+content:fuck
+nsfw:true
+---
+user:roshan.dev
+content:dev saying python is better then js
+nsfw:false
+---
+user:roshan.dev69
+content:dev saying python is better then js you fucker
+nsfw:true
+---
+user:fuck you
+content:fuck you
+nsfw:true
+---
+user:fuck you
+content:fuck you
+nsfw:true
+---
+user:fuckyou
+content:mother fucker
+nsfw:true
+---
+user:007
+content:hey there
+nsfw:false
+---
+user:roshan
+content:you fucking kidding me ?
+nsfw:true
+---
+user:roshan
+content:it works
+nsfw:false
+---
