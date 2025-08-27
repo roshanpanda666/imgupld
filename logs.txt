@@ -94,3 +94,49 @@ user:Good
 content:It's good
 nsfw:false
 ---
+user:Fucker
+content:Fucker
+nsfw:true
+---
+user:Fuck
+content:Fuck
+nsfw:true
+---
+user:Sunil
+content:Bitch
+nsfw:false
+---
+user:ronaldo
+content:suiiiiiiiiii motherucker
+nsfw:false
+---
+user:fuck you
+content:fuck you
+nsfw:true
+---
+user:roxian_0x
+content:javascript shits on atlas's data streaming 
+
+use python 
+
+or use websockets 
+
+python roxxxx fucker
+nsfw:true
+---
+user:69
+content:ill lick you pussy while crawling towords you to kiss
+nsfw:false
+---
+user:fuck
+content:fuck
+nsfw:true
+---
+user:kill
+content:kill yourself bitch
+nsfw:false
+---
+user:milf
+content:milf
+nsfw:false
+---

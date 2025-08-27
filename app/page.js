@@ -1,18 +1,24 @@
-import React from 'react'
-import ImageUploader from './components/imgup'
-import Nav from './components/nav'
+"use client";
+import React, { useEffect } from "react";
+import ImageUploader from "./components/imgup";
+import Nav from "./components/nav";
 
+const Page = () => {
+  // 👇 hit NLPengine once on page load
+  useEffect(() => {
+    fetch("/api/NLPengine")
+      .then((res) => console.log("✅ NLPengine triggered"))
+      .catch((err) => console.error("❌ Failed to start NLPengine:", err));
+  }, []);
 
-
-const page = () => {
   return (
     <div>
-      <Nav></Nav>
+      <Nav />
       <div>
-        <ImageUploader></ImageUploader>
+        <ImageUploader />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default Page;

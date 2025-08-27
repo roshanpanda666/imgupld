@@ -20,6 +20,12 @@ const Nav = () => {
             📝 Text Section
           </span>
         </Link>
+
+        <Link href="/api/NLPengine">
+          <span className="cursor-pointer hover:text-pink-400 transition-colors duration-200">
+            viw NLP engine
+          </span>
+        </Link>
       </div>
     </nav>
   );

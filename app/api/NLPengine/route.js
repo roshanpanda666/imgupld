@@ -10,8 +10,34 @@ let isWatching = false; // prevent multiple listeners in dev
 // 🔥 Setup NLP filter
 const tokenizer = new natural.WordTokenizer();
 const stemmer = natural.PorterStemmer;
-const badwords = ["fuck", "shit", "porn", "nsfw", "fucker"];
+const badwords = [
+    // General profanity
+    "fuck", "fucker", "shit", "bullshit", "asshole", "bitch", "bastard", 
+    "dick", "cock", "pussy", "cunt", "slut", "whore", "twat", "prick", 
+    "motherfucker", "son of a bitch", "damn", "hell",
+  
+    // NSFW / sexual
+    "porn", "nsfw", "xxx", "sex", "nude", "naked", "blowjob", "handjob", 
+    "dildo", "vibrator", "anal", "oral", "cum", "semen", "orgasm", 
+    "ejaculation", "boobs", "tits", "milf", "fetish", "bdsm", "kink", 
+    "erotic", "hardcore", "stripper",
+  
+    // Racist / hate speech
+    "nigger", "nigga", "chink", "spic", "fag", "faggot", "tranny", 
+    "retard", "cripple", "gook", "coon", "paki", "raghead", "jap", 
+    "wetback", "kike", "dyke",
+  
+    // Self-harm / violence
+    "kill yourself", "suicide", "die", "murder", "terrorist", "bomb", 
+    "shoot", "school shooter", "stab", "rape", "rapist",
+  
+    // Drugs / illegal
+    "weed", "cocaine", "meth", "heroin", "lsd", "ecstasy", "crack", 
+    "drug dealer", "overdose",
 
+    //local gali
+    "madharchood","bsdk","magiha","lund"
+  ];
 function containsNSFW(text) {
   const tokens = tokenizer.tokenize(text.toLowerCase());
   const stemmed = tokens.map((word) => stemmer.stem(word));
