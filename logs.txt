@@ -168,3 +168,22 @@ user:Fuck tou
 content:Fuck you
 nsfw:true
 ---
+user:Fuck
+content:Fuck
+nsfw:true
+---
+user:Roxian_0x
+content:Fuck you
+My love for python increased just after I used js for backend and try to implement NLP in it and also data monitoring and also subprocess didn't supported here 
+
+Bsdk
+nsfw:true
+---
+user:Roxian_0x
+content:In the image section I'll add computer vision to detect nsfw , till then upload anything you want 
+nsfw:true
+---
+user:Roxian_0x
+content:In the image section I'll add computer vision to detect unnecessary activity, till then upload anything you want
+nsfw:false
+---
