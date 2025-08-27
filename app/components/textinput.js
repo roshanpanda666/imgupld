@@ -31,8 +31,6 @@ const Textinput = () => {
       const result=await response.json()
       if(result.success){
         alert("data posted successfully")
-        alert(`You posted: ${value}`);
-        alert(`user name: ${value2}`)
         inputRef.current.value = ""; // clear after posting
         userRef.current.value = ""; // clear after posting
       }

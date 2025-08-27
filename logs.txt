@@ -78,3 +78,7 @@ user:roshan
 content:it works
 nsfw:false
 ---
+user:my name is fuck
+content:fuck you
+nsfw:true
+---
