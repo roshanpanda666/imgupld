@@ -8,8 +8,6 @@ const page = () => {
   return (
     <div>
       <Nav></Nav>
-      home page
-
       <div>
         <ImageUploader></ImageUploader>
       </div>
