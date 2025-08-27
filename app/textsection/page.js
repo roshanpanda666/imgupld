@@ -9,28 +9,39 @@ export default function UserList() {
   const [loading, setLoading] = useState(true);
   const [revealed, setRevealed] = useState({});
 
-  useEffect(() => {
-    // 🔥 Fetch + Sort
-    fetch("/api/userget")
-      .then((res) => res.json())
-      .then((data) => {
-        const sorted = data.sort((a, b) => (a._id < b._id ? 1 : -1)); // latest first
-        setUsers(sorted);
-        setLoading(false);
-      });
+  // 🔥 Fetch users + sort latest first
+  async function fetchUsers() {
+    try {
+      const res = await fetch("/api/userget");
+      const data = await res.json();
+      const sorted = data.sort((a, b) => (a._id < b._id ? 1 : -1));
+      setUsers(sorted);
+      setLoading(false);
+    } catch (err) {
+      console.error("⚠️ Failed to fetch users:", err);
+    }
+  }
 
-    // 🔥 Listen for live changes
+  useEffect(() => {
+    // Initial fetch
+    fetchUsers();
+
+    // ⏳ Poll every 2s
+    const interval = setInterval(fetchUsers, 2000);
+
+    // 🔥 Live change listener (SSE)
     const eventSource = new EventSource("/api/userstream");
     eventSource.onmessage = (event) => {
       const change = JSON.parse(event.data);
       console.log("📡 Change:", change);
 
       if (change.operationType === "insert") {
-        const newUser = change.fullDocument;
-        setUsers((prev) => [newUser, ...prev]); // latest on top
+        setUsers((prev) => [change.fullDocument, ...prev]);
       }
       if (change.operationType === "delete") {
-        setUsers((prev) => prev.filter((u) => u._id !== change.documentKey._id));
+        setUsers((prev) =>
+          prev.filter((u) => u._id !== change.documentKey._id)
+        );
       }
       if (change.operationType === "update") {
         setUsers((prev) =>
@@ -43,7 +54,10 @@ export default function UserList() {
       }
     };
 
-    return () => eventSource.close();
+    return () => {
+      eventSource.close();
+      clearInterval(interval);
+    };
   }, []);
 
   // 🗑️ Delete Handler
