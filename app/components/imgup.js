@@ -91,9 +91,7 @@ export default function ImageUploader() {
               alt={img.fileName || "image"}
               className="w-full h-40 object-cover rounded-xl"
             />
-            <p className="text-sm text-cyan-200 mt-2 text-center">
-              {img.fileName}
-            </p>
+            
           </div>
         ))}
       </div>
