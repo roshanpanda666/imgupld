@@ -82,3 +82,15 @@ user:my name is fuck
 content:fuck you
 nsfw:true
 ---
+user:fuck
+content:fuck you
+nsfw:true
+---
+user:Fuck
+content:Fuck you 
+nsfw:true
+---
+user:Good
+content:It's good
+nsfw:false
+---

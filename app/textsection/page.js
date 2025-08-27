@@ -10,37 +10,36 @@ export default function UserList() {
   const [revealed, setRevealed] = useState({});
 
   useEffect(() => {
-    // 🟢 Fetch initial data (sorted latest first)
+    // 🔥 Fetch + Sort
     fetch("/api/userget")
       .then((res) => res.json())
       .then((data) => {
-        const sorted = data.sort((a, b) => (a._id < b._id ? 1 : -1));
+        const sorted = data.sort((a, b) => (a._id < b._id ? 1 : -1)); // latest first
         setUsers(sorted);
         setLoading(false);
       });
 
-    // 🔴 Realtime updates via SSE
+    // 🔥 Listen for live changes
     const eventSource = new EventSource("/api/userstream");
-
     eventSource.onmessage = (event) => {
       const change = JSON.parse(event.data);
       console.log("📡 Change:", change);
 
-      if (change.type === "insert") {
-        const newUser = change.doc;
-        setUsers((prev) => [newUser, ...prev]);
+      if (change.operationType === "insert") {
+        const newUser = change.fullDocument;
+        setUsers((prev) => [newUser, ...prev]); // latest on top
       }
-
-      if (change.type === "update") {
+      if (change.operationType === "delete") {
+        setUsers((prev) => prev.filter((u) => u._id !== change.documentKey._id));
+      }
+      if (change.operationType === "update") {
         setUsers((prev) =>
           prev.map((u) =>
-            u._id === change.docId ? { ...u, ...change.updatedFields } : u
+            u._id === change.documentKey._id
+              ? { ...u, ...change.updateDescription.updatedFields }
+              : u
           )
         );
-      }
-
-      if (change.type === "delete") {
-        setUsers((prev) => prev.filter((u) => u._id !== change.docId));
       }
     };
 
@@ -84,7 +83,10 @@ export default function UserList() {
         return (
           <div
             key={user._id}
-            className="relative p-6 rounded-2xl shadow-lg border border-white/20 bg-white/10 backdrop-blur-3xl transition-transform duration-300 hover:scale-[1.02] flex justify-between items-start gap-4"
+            className="relative p-6 rounded-2xl shadow-lg border border-white/20 
+                       bg-white/10 backdrop-blur-3xl 
+                       transition-transform duration-300 hover:scale-[1.02] 
+                       flex justify-between items-start gap-4"
           >
             {/* Card Content */}
             <div className="flex-1">
@@ -98,7 +100,8 @@ export default function UserList() {
             {/* 🗑️ Delete Button */}
             <button
               onClick={() => handleDelete(user._id)}
-              className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm font-bold rounded-lg shadow-md transition-all"
+              className="px-3 py-1 bg-red-500 hover:bg-red-600 
+                         text-white text-sm font-bold rounded-lg shadow-md transition-all"
             >
               Delete
             </button>
@@ -106,12 +109,16 @@ export default function UserList() {
             {/* Overlay for NSFW */}
             {isBad && !isRevealed && (
               <div
-                className="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/60 backdrop-blur-xl transition-opacity duration-500"
+                className="absolute inset-0 flex items-center justify-center 
+                           rounded-2xl bg-black/90 backdrop-blur-3xl 
+                           transition-opacity duration-500"
                 onClick={() =>
                   setRevealed((prev) => ({ ...prev, [user._id]: true }))
                 }
               >
-                <button className="px-5 py-2 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white font-bold rounded-full shadow-lg hover:scale-105 transition-transform">
+                <button className="px-6 py-3 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 
+                                   text-white font-bold rounded-full shadow-xl 
+                                   hover:scale-110 transition-transform">
                   🔞 Tap to reveal
                 </button>
               </div>
